@@ -1,47 +1,45 @@
 <template>
-  <div class="grid-container">
-    <div class="grid-x grid-padding-x">
-      <div class="medium-6 cell">
-        <label for="username">Username
-          <input id="username" type="text" v-model.trim="username">
-        </label>
-      </div>
-      <div class="medium-6 cell">
-        <label for="password">Password
-          <input id="password" type="password" v-model="password">
-        </label>
-      </div>
-    </div>
-    <div class="grid-x grid-padding-x">
-      <div class="medium-6 cell">
-        <label for="method">Method
-          <select id="method" v-model="selectedMethod">
-            <option v-for="(method, index) in methods" :value="method" :key="index">{{method}}</option>
-          </select>
-        </label>
-      </div>
-      <div class="medium-6 cell">
-        <label for="salt">Salt length
-          <input id="salt" type="number" v-model.number="saltLength">
-        </label>
-      </div>
-    </div>
-    <div class="callout">
-      <div>
-        <template v-if="calculating">
-          <div class="loader"></div>
-        </template>
-        <template v-else>
-          <code v-show="result !== ''">{{ username }}{{ seperator }}{{ result }}</code>
-        </template>
-      </div>
-    </div>
+  <div>
+    <v-card-text>
+      <v-form>
+        <v-text-field
+          label="Username"
+          name="username"
+          type="text"
+          v-model.trim="username"
+        >
+        </v-text-field>
+        <v-text-field
+          label="Password"
+          name="password"
+          type="password"
+          v-model.trim="password"
+        >
+        </v-text-field>
+        <v-select label="Method" v-model="selectedMethod" :items="methods">
+        </v-select>
+        <v-text-field
+          label="Salt length"
+          type="number"
+          id="salt"
+          v-model.number="saltLength"
+        >
+        </v-text-field>
+      </v-form>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn color="primary" @click="generatePassword">Generate</v-btn>
+    </v-card-actions>
+    <v-card-text>
+      <code class="w-full p-4">{{ username }}{{ separator }}{{ result }}</code>
+    </v-card-text>
   </div>
 </template>
 
 <script>
 import bcrypt from "bcryptjs";
 import debounce from "lodash.debounce";
+
 const METHODS = { BCRYPT: "bcrypt" };
 export default {
   name: "Htpasswrd",
@@ -58,19 +56,8 @@ export default {
     };
   },
   computed: {
-    seperator() {
+    separator() {
       return this.password !== "" ? ":" : "";
-    }
-  },
-  watch: {
-    password() {
-      this.generatePassword();
-    },
-    saltLength() {
-      this.generatePassword();
-    },
-    selectedMethod() {
-      this.generatePassword();
     }
   },
   methods: {
@@ -105,21 +92,10 @@ export default {
 };
 </script>
 <style>
-.loader {
-  border: 5px solid #f3f3f3; /* Light grey */
-  border-top: 5px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  animation: spin 2s linear infinite;
+.w-full {
+  width: 100%;
 }
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.p-4 {
+  padding: 1rem;
 }
 </style>
