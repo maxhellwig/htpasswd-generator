@@ -1,11 +1,13 @@
 <template>
   <div>
-    <v-card-text>
-      <v-form>
+    <v-form v-on:submit="generatePassword" ref="form" v-model="valid">
+      <v-card-text>
         <v-text-field
           label="Username"
           name="username"
           type="text"
+          :rules="[v => !!v || 'Password is required']"
+          required
           v-model.trim="username"
         >
         </v-text-field>
@@ -13,6 +15,8 @@
           label="Password"
           name="password"
           type="password"
+          :rules="[v => !!v || 'Email is required']"
+          required
           v-model.trim="password"
         >
         </v-text-field>
@@ -25,31 +29,53 @@
           v-model.number="saltLength"
         >
         </v-text-field>
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn color="primary" @click="generatePassword">Generate</v-btn>
-    </v-card-actions>
-    <v-card-text>
-      <code class="w-full p-4">{{ username }}{{ separator }}{{ result }}</code>
-    </v-card-text>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          id="generate-password"
+          color="primary"
+          :disabled="!valid"
+          @click="generatePassword"
+          >Generate</v-btn
+        >
+        <v-spacer></v-spacer>
+        <v-btn @click="reset">Reset form</v-btn>
+      </v-card-actions>
+      <v-card-text>
+        <template v-if="calculating">
+          <code class="w-full p-4"
+            ><v-progress-circular indeterminate color="primary"
+          /></code>
+        </template>
+        <template v-else>
+          <code class="w-full p-4"
+            >{{ username }}{{ separator }}{{ result }}</code
+          >
+        </template>
+      </v-card-text>
+    </v-form>
   </div>
 </template>
 
 <script>
-import bcrypt from "bcryptjs";
-import debounce from "lodash.debounce";
-
+import Worker from "worker-loader!../encrypt/worker.js";
+import { encrypt } from "../encrypt/encrypt";
+let worker;
+if (window.Worker) {
+  worker = new Worker();
+}
 const METHODS = { BCRYPT: "bcrypt" };
+
 export default {
-  name: "Htpasswrd",
+  name: "Htpasswd",
+
   data() {
     return {
+      valid: false,
       username: "",
       password: "",
       saltLength: 10,
       result: "",
-      debounceTimer: 500,
       calculating: false,
       selectedMethod: METHODS.BCRYPT,
       methods: [METHODS.BCRYPT]
@@ -61,33 +87,31 @@ export default {
     }
   },
   methods: {
-    generatePassword() {
-      const self = this;
-      if (self.password !== "") {
-        if (this.selectedMethod === METHODS.BCRYPT) {
-          this.debouncedBcrypt();
-        }
-      } else {
-        self.result = "";
-      }
+    reset() {
+      this.username = "";
+      this.password = "";
+      this.result = "";
+      this.calculating = false;
     },
-    setBcryptHash() {
-      const self = this;
-      self.calculating = true;
-      bcrypt.genSalt(self.saltLength, (err, salt) => {
-        if (!err) {
-          bcrypt.hash(self.password, salt, (err, hash) => {
-            if (!err) {
-              self.result = `${hash}`;
-              self.calculating = false;
-            }
-          });
+    generatePassword() {
+      if (this.valid) {
+        this.calculating = true;
+        this.result = "";
+        if (window.Worker) {
+          worker.postMessage([this.password, this.saltLength]);
+        } else {
+          encrypt(this.password, this.saltLength);
         }
-      });
+      }
     }
   },
-  created() {
-    this.debouncedBcrypt = debounce(this.setBcryptHash, this.debounceTimer);
+  mounted() {
+    if (window.Worker) {
+      worker.onmessage = ({ data }) => {
+        this.calculating = false;
+        this.result = data;
+      };
+    }
   }
 };
 </script>
