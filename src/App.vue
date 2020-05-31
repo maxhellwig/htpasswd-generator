@@ -22,6 +22,9 @@
                 to generated Copy&Paste ready htpasswd entries without blocking
                 your UI.
                 <p>
+                  Code is on <a href="https://github.com/maxhellwig/htpasswd-generator">GitHub</a>
+                </p>
+                <p>
                   Your private data are <strong>not</strong> leaving your
                   computer.
                 </p>
