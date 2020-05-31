@@ -1,8 +1,13 @@
 # htpasswd-generator
-This project provides a web application which generates htpasswd entries.  
-The app uses hash algorithms implemented in JavaScript, so your password has not to leave your browser.  
 
-[bcryptjs](https://github.com/dcodeIO/bcrypt.js/) is used for [bcrypt](https://en.wikipedia.org/wiki/Bcrypt), it's the default and the recommended hashing algorithm.
+This project provides a web application which generates bcrypt hashed htpasswd entries.  
+The app uses hash algorithms implemented in JavaScript, so your password does not leave your browser.
+A web worker is used to delegate password hashing to another thread. This keeps the UI responsive while generating the hashed password entry.
+
+[bcryptjs](https://github.com/dcodeIO/bcrypt.js/) is used for [bcrypt](https://en.wikipedia.org/wiki/Bcrypt), it's the [recommended](https://httpd.apache.org/docs/2.4/programs/htpasswd.html) hashing algorithm.
+
+## App is deployed on netlify:
+[https://htpasswd-generator.netlify.app/](https://htpasswd-generator.netlify.app/)
 
 ## Project setup
 
@@ -15,11 +20,13 @@ npm install
 ```
 
 ### Compiles and hot-reloads for development
+
 ```
 npm run serve
 ```
 
 ### Compiles and minifies for production
+
 ```
 npm run build
 ```
