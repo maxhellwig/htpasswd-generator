@@ -19,7 +19,7 @@
                   href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API"
                   >web worker</a
                 >
-                to generated Copy&Paste ready htaccess entries without blocking
+                to generated Copy&Paste ready htpasswd entries without blocking
                 your UI.
                 <p>
                   Your private data are <strong>not</strong> leaving your
