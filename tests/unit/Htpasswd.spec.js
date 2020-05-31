@@ -10,7 +10,13 @@ import Htpasswd from "../../src/components/Htpasswd";
 import { shallowMount } from "@vue/test-utils";
 
 import worker from "../../src/encrypt/worker";
+import { encrypt } from "../../src/encrypt/encrypt";
 
+jest.mock("../../src/encrypt/encrypt", () => {
+  return {
+    encrypt: jest.fn()
+  };
+});
 jest.mock("../../src/encrypt/worker", () => {
   return {
     postMessage: jest.fn(),
@@ -35,9 +41,6 @@ describe("Htpasswd", () => {
   it("has name 'Htpasswd'", () => {
     expect(Htpasswd.name).toBe("Htpasswd");
   });
-  it("renders as expected", () => {
-    expect(wrapper.html()).toMatchSnapshot();
-  });
   it("resets inputs when calling reset()", () => {
     wrapper.setData({ password: "abc" });
     expect(wrapper.vm.password).toBe("abc");
@@ -56,9 +59,6 @@ describe("Htpasswd", () => {
     const button = wrapper.find("#generate-password");
     button.trigger("click");
     expect(wrapper.vm.calculating).toBe(true);
-    expect(worker.postMessage).toHaveBeenCalledWith([
-      password,
-      defaultSaltLength
-    ]);
+    expect(encrypt).toHaveBeenCalledWith(password, defaultSaltLength);
   });
 });
