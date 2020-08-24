@@ -25,7 +25,7 @@
                   Code is on <a href="https://github.com/maxhellwig/htpasswd-generator">GitHub</a>
                 </p>
                 <p>
-                  Your private data are <strong>not</strong> leaving your
+                  Your private data is <strong>not</strong> leaving your
                   computer.
                 </p>
               </v-card-text>
