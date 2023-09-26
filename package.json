@@ -15,9 +15,9 @@
     "build": "parcel build"
   },
   "devDependencies": {
-    "@parcel/packager-raw-url": "^2.9.3",
-    "@parcel/transformer-webmanifest": "^2.9.3",
+    "@parcel/packager-raw-url": "^2.8.0",
+    "@parcel/transformer-webmanifest": "^2.8.0",
     "cosmiconfig": "^8.2.0",
-    "parcel": "^2.9.3"
+    "parcel": "v2.8.0"
   }
 }
