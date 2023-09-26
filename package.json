@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "start": "parcel",
-    "build:wasm": "cargo install wasm-pack && cd ./bcrypt-wasm && wasm-pack build --target web",
+    "build:wasm": "rustup default stable && cargo install wasm-pack && cd ./bcrypt-wasm && wasm-pack build --target web",
     "build:js": "",
     "build": "parcel build"
   },
