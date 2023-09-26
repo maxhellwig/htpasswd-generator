@@ -14,10 +14,6 @@
     "build:js": "",
     "build": "parcel build"
   },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "register-service-worker": "^1.7.2"
-  },
   "devDependencies": {
     "@parcel/packager-raw-url": "^2.9.3",
     "@parcel/transformer-webmanifest": "^2.9.3",
